@@ -1,5 +1,1 @@
-{
-  "version": 2,
-  "name": "wandermate-backend",
-  "routes": [{ "src": "/(.*)", "dest": "dist/server.js" }]
-}
+{ "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/api" }] }
