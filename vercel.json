@@ -1,1 +1,6 @@
-{ "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/api" }] }
+{
+  "version": 2,
+  "name": "wandermate-backend",
+  "builds": [{ "src": "server.ts", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "server.ts" }]
+}
