@@ -1,6 +1,5 @@
 {
   "version": 2,
   "name": "wandermate-backend",
-  "builds": [{ "src": "server.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "server.js" }]
+  "routes": [{ "src": "/(.*)", "dest": "dist/server.js" }]
 }
