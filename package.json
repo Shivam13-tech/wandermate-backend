@@ -2,11 +2,11 @@
   "name": "wandermate-backend",
   "version": "1.0.0",
   "description": "Backend server for wandermate web application",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "nodemon --watch '*.ts' --exec ts-node server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "nodemon --watch '*.ts' --exec ts-node server.ts"
   },
   "author": "Shivam Pandey",
   "license": "ISC",
