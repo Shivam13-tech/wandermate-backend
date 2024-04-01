@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "name": "wandermate-backend",
   "version": "1.0.0",
   "description": "Backend server for wandermate web application",
