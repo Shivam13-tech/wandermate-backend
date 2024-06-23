@@ -3,6 +3,7 @@ import authRouter from "./Routes/authRoutes";
 import guideRouter from "./Routes/guideRoutes";
 import paymentRouter from "./Routes/paymentRoute";
 import tourRouter from "./Routes/tourRoutes";
+import userRouter from "./Routes/userRoutes";
 import cors from "cors";
 
 const app = express();
@@ -14,5 +15,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/guide", guideRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/tour", tourRouter);
+app.use("/api/user", userRouter);
 
 export default app;

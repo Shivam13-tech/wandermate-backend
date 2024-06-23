@@ -109,7 +109,11 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const protectRoute = async (req: Request, res: Response, next: any) => {
+export const protectGuideRoute = async (
+  req: Request,
+  res: Response,
+  next: any
+) => {
   try {
     let token;
     if (

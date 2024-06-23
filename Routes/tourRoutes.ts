@@ -5,12 +5,12 @@ import {
   getGuideTour,
   deleteTour,
 } from "../Controllers/tourController";
-import { protectRoute } from "../Controllers/authController";
+import { protectGuideRoute } from "../Controllers/authController";
 
 const router = express.Router();
 
-router.route("/addtour").post(protectRoute, uploadimage, createTour);
-router.route("/gettour").get(protectRoute, getGuideTour);
-router.route("/deletetour/:id").delete(protectRoute, deleteTour);
+router.route("/addtour").post(protectGuideRoute, uploadimage, createTour);
+router.route("/gettour").get(protectGuideRoute, getGuideTour);
+router.route("/deletetour/:id").delete(protectGuideRoute, deleteTour);
 
 export default router;
