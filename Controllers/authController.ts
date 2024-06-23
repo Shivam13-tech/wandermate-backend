@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { promisify } from "util";
 import User from "../Models/authModel";
+import Guide from "../Models/guideModel";
 
 const signToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
@@ -21,6 +23,12 @@ interface CreateJWTTokenFunction {
   (userData: UserData, statusCode: number, res: Response): void;
 }
 
+declare module "express-serve-static-core" {
+  interface Request {
+    userID?: string;
+  }
+}
+
 const createJWTToken: CreateJWTTokenFunction = (userData, statusCode, res) => {
   const Token = signToken(userData._id);
   userData.password = undefined;
@@ -28,6 +36,17 @@ const createJWTToken: CreateJWTTokenFunction = (userData, statusCode, res) => {
     status: "Success",
     Token,
     Result: userData,
+  });
+};
+
+const verifyToken = (token: string, secret: string): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, secret, (err, decoded) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(decoded);
+    });
   });
 };
 
@@ -86,6 +105,45 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({
       status: "Login Failed",
       message: error,
+    });
+  }
+};
+
+export const protectRoute = async (req: Request, res: Response, next: any) => {
+  try {
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+    if (!token) {
+      return res.status(401).json({
+        status: "Failed",
+        Message: "Please provide valid email and password",
+      });
+    }
+    const decoded: any = await verifyToken(
+      token,
+      process.env.JWT_SECRET as string
+    );
+    const currentUser = await Guide.findById(decoded.id);
+    if (!currentUser) {
+      return res.status(401).json({
+        status: "Failed",
+        Message: "The user no longer exist",
+      });
+    }
+
+    req.userID = currentUser._id;
+    next();
+  } catch (error) {
+    console.log(error);
+    // Handle any error that occurred during verification
+    return res.status(401).json({
+      status: "Failed",
+      message: "Invalid token",
     });
   }
 };

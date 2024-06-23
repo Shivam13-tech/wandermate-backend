@@ -1,13 +1,39 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import Guide from "../Models/guideModel";
+import jwt from "jsonwebtoken";
 import { generateRandomString } from "../Utils/generateCreds";
+
+const signToken = (id: string) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET as string, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
+
+interface UserData {
+  _id: string;
+  userName: string;
+  password: string | undefined;
+}
+
+interface CreateJWTTokenFunction {
+  (userData: UserData, statusCode: number, res: Response): void;
+}
+
+const createJWTToken: CreateJWTTokenFunction = (userData, statusCode, res) => {
+  const Token = signToken(userData._id);
+  // userData.password = undefined;
+  res.status(statusCode).json({
+    status: "Success",
+    Token,
+    Result: userData,
+  });
+};
 
 export const createGuide = async (req: Request, res: Response) => {
   try {
     let newUsername = generateRandomString(8);
     const password = generateRandomString(8);
-    console.log(password, "password for guide");
     let existingGuide = await Guide.findOne({ userName: newUsername });
     while (existingGuide) {
       newUsername = generateRandomString(8);
@@ -18,11 +44,11 @@ export const createGuide = async (req: Request, res: Response) => {
       userName: newUsername,
       password,
     });
-
-    return res.status(200).json({
-      status: "Success",
-      Result: newGuide,
-    });
+    createJWTToken(newGuide, 201, res);
+    // return res.status(200).json({
+    //   status: "Success",
+    //   Result: newGuide,
+    // });
   } catch (error) {
     return res.status(400).json({
       status: "Something went wrong! Try again later",
