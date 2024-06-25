@@ -20,20 +20,24 @@ interface CreateJWTTokenFunction {
   (userData: UserData, statusCode: number, res: Response): void;
 }
 
+let password: any;
+
 const createJWTToken: CreateJWTTokenFunction = (userData, statusCode, res) => {
   const Token = signToken(userData._id);
-  // userData.password = undefined;
+  userData.password = undefined;
   res.status(statusCode).json({
     status: "Success",
     Token,
     Result: userData,
+    link: "https://wandermate-admin-ka5tnnmzh-shivam13techs-projects.vercel.app",
+    password,
   });
 };
 
 export const createGuide = async (req: Request, res: Response) => {
   try {
     let newUsername = generateRandomString(8);
-    const password = generateRandomString(8);
+    password = generateRandomString(8);
     let existingGuide = await Guide.findOne({ userName: newUsername });
     while (existingGuide) {
       newUsername = generateRandomString(8);
@@ -45,10 +49,6 @@ export const createGuide = async (req: Request, res: Response) => {
       password,
     });
     createJWTToken(newGuide, 201, res);
-    // return res.status(200).json({
-    //   status: "Success",
-    //   Result: newGuide,
-    // });
   } catch (error) {
     return res.status(400).json({
       status: "Something went wrong! Try again later",
@@ -73,11 +73,12 @@ export const loginGuide = async (req: Request, res: Response) => {
         message: "Please provide valid email and password",
       });
     }
-    res.status(201).json({
-      status: true,
-      message: "Login success",
-      user,
-    });
+    createJWTToken(user, 200, res);
+    // res.status(201).json({
+    //   status: true,
+    //   message: "Login success",
+    //   user,
+    // });
   } catch (error) {
     return res.status(400).json({
       status: "Login Failed",
