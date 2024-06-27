@@ -151,3 +151,31 @@ export const protectGuideRoute = async (
     });
   }
 };
+
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    if (!id) {
+      return res.status(400).json({
+        status: "Failed",
+        message: "Please provide userid",
+      });
+    }
+    const user = await User.find({ _id: id });
+    if (!user) {
+      return res.status(400).json({
+        status: "Failed",
+        message: "Please provide valid user info",
+      });
+    }
+    res.status(201).json({
+      status: "successful",
+      user,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: "Failed",
+      message: error,
+    });
+  }
+};
