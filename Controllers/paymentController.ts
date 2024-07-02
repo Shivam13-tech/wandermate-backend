@@ -5,7 +5,9 @@ import User from "../Models/authModel";
 
 dotenv.config({ path: ".env" });
 
-const stripe = require("stripe")(`${process.env.STRIPE_KEY}`);
+const stripe = require("stripe")(
+  "sk_test_51PJIB9SDFp9AZ2SH7geIQQZfHF5PHfLG6mssag9veLc06fMdA5Ti0ShiLXXon8ySBOIC0Id942kyPlGqZMLAWohf000SEdflD8"
+);
 
 interface Item {
   id: number;
@@ -83,7 +85,7 @@ export const createCheckout = async (req: Request, res: Response) => {
       { $push: { boughtTours: tourId } },
       { new: true }
     );
-
+    console.log(updatedUser, "updated user");
     if (!updatedUser) {
       return res.status(404).json({
         status: "error",
