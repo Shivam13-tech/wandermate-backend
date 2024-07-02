@@ -74,8 +74,8 @@ export const createCheckout = async (req: Request, res: Response) => {
           quantity: item.quantity,
         };
       }),
-      success_url: `https://wandermate-frontend-iq91uni22-shivam13techs-projects.vercel.app/booking`,
-      cancel_url: `https://wandermate-frontend-iq91uni22-shivam13techs-projects.vercel.app`,
+      success_url: "https://wandermate-frontend.vercel.app/booking",
+      cancel_url: "https://wandermate-frontend.vercel.app",
     });
     // Update user document to push the newly bought tourId
     const updatedUser = await User.findByIdAndUpdate(
